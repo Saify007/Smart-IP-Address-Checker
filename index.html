@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart IP Checker</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap');
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            margin: 0;
+            background: radial-gradient(circle, #2c3e50, #1a237e);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #eee;
+            overflow: hidden;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.3);
+            padding: 60px;
+            text-align: center;
+            width: 90%;
+            max-width: 750px;
+            transform-style: preserve-3d;
+            transition: transform 0.7s cubic-bezier(0.36, 0.66, 0.4, 1);
+            perspective: 1000px;
+        }
+
+        .container:hover {
+            transform: rotateY(7deg) rotateX(3deg) translateZ(15px);
+        }
+
+        h1 {
+            font-size: 3.5em;
+            margin-bottom: 40px;
+            color: #f0f0f0;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);
+            letter-spacing: 0.05em;
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: .08em solid #eee;
+            animation: type 3.5s steps(25, end) infinite alternate,
+                       blink .75s step-end infinite;
+        }
+
+        @keyframes type {
+            from { width: 0 }
+            to { width: 100% }
+        }
+
+        @keyframes blink {
+            from, to { border-color: transparent }
+            50% { border-color: #eee; }
+        }
+
+        #ip-info {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 35px;
+            margin-top: 50px;
+            text-align: left;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        #ip-info p {
+            font-size: 1.25em;
+            line-height: 2.2;
+            margin-bottom: 25px;
+            color: #ddd;
+            word-break: break-word;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fade-in 0.8s ease-out forwards 0.3s;
+        }
+
+        @keyframes fade-in {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        #ip-info strong {
+            color: #fff;
+            font-weight: 600;
+            margin-right: 20px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+        }
+
+        .loader {
+            border: 12px solid rgba(255, 255, 255, 0.15);
+            border-top: 12px solid #64b5f6;
+            border-radius: 50%;
+            width: 90px;
+            height: 90px;
+            animation: rotate 2s linear infinite;
+            margin: 40px auto;
+        }
+
+        @keyframes rotate {
+            from { transform: rotateY(0deg) rotateX(0deg); }
+            to { transform: rotateY(360deg) rotateX(360deg); }
+        }
+
+        .error-message {
+            color: #ff8a65;
+            font-size: 1.4em;
+            margin-top: 40px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+            animation: pulse-error 1.5s infinite alternate;
+        }
+
+        @keyframes pulse-error {
+            from { opacity: 0.7; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Enhanced Responsive Design */
+
+        /* Default styles for larger screens (Desktop PC, Laptops) are already defined above */
+
+        /* Smaller Laptops and Tablets (up to 1024px width) */
+        @media (max-width: 1024px) {
+            .container {
+                padding: 50px;
+                max-width: 90%;
+            }
+
+            h1 {
+                font-size: 3em;
+                margin-bottom: 35px;
+            }
+
+            #ip-info {
+                padding: 30px;
+                margin-top: 40px;
+            }
+
+            #ip-info p {
+                font-size: 1.15em;
+                line-height: 2;
+                margin-bottom: 20px;
+            }
+
+            .loader {
+                width: 80px;
+                height: 80px;
+                border-width: 10px;
+            }
+        }
+
+        /* Tablets (up to 768px width) */
+        @media (max-width: 768px) {
+            .container {
+                padding: 40px;
+            }
+
+            h1 {
+                font-size: 2.5em;
+                margin-bottom: 30px;
+                animation: type-mobile 4s steps(20, end) infinite alternate,
+                           blink .75s step-end infinite;
+            }
+
+            @keyframes type-mobile {
+                from { width: 0 }
+                to { width: 95% }
+            }
+
+            #ip-info {
+                padding: 25px;
+                margin-top: 35px;
+            }
+
+            #ip-info p {
+                font-size: 1.05em;
+                line-height: 1.8;
+                margin-bottom: 15px;
+            }
+
+            .loader {
+                width: 60px;
+                height: 60px;
+                border-width: 8px;
+            }
+        }
+
+        /* Smartphones (up to 480px width) */
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px;
+                border-radius: 10px;
+            }
+
+            h1 {
+                font-size: 2em;
+                margin-bottom: 25px;
+                animation: type-small-mobile 4.5s steps(15, end) infinite alternate,
+                           blink .75s step-end infinite;
+            }
+
+            @keyframes type-small-mobile {
+                from { width: 0 }
+                to { width: 100% }
+            }
+
+            #ip-info {
+                padding: 20px;
+                margin-top: 30px;
+                border-radius: 8px;
+            }
+
+            #ip-info p {
+                font-size: 0.95em;
+                line-height: 1.6;
+                margin-bottom: 12px;
+            }
+
+            #ip-info strong {
+                margin-right: 10px;
+            }
+
+            .loader {
+                width: 50px;
+                height: 50px;
+                border-width: 6px;
+            }
+
+            .error-message {
+                font-size: 1.2em;
+                margin-top: 30px;
+            }
+        }
+
+        /* Small Smartphones (up to 320px width) */
+        @media (max-width: 320px) {
+            h1 {
+                font-size: 1.8em;
+                animation: type-tiny-mobile 5s steps(12, end) infinite alternate,
+                           blink .75s step-end infinite;
+            }
+
+            @keyframes type-tiny-mobile {
+                from { width: 0 }
+                to { width: 100% }
+            }
+
+            #ip-info p {
+                font-size: 0.9em;
+                line-height: 1.5;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Smart IP Address Checker</h1>
+        <div id="loading" class="">
+            <div class="loader"></div>
+            <p>Fetching your IP details...</p>
+        </div>
+        <div id="ip-info" class="hidden">
+            <p><strong>IP Address:</strong> <span id="ip"></span></p>
+            <p><strong>Country:</strong> <span id="country"></span></p>
+            <p><strong>Country Code:</strong> <span id="countryCode"></span></p>
+            <p><strong>Region:</strong> <span id="regionName"></span></p>
+            <p><strong>City:</strong> <span id="city"></span></p>
+            <p><strong>ZIP:</strong> <span id="zip"></span></p>
+            <p><strong>Latitude:</strong> <span id="lat"></span></p>
+            <p><strong>Longitude:</strong> <span id="lon"></span></p>
+            <p><strong>Timezone:</strong> <span id="timezone"></span></p>
+            <p><strong>ISP:</strong> <span id="isp"></span></p>
+            <p><strong>Organization:</strong> <span id="org"></span></p>
+            <p><strong>AS:</strong> <span id="as"></span></p>
+        </div>
+        <div id="error-message" class="hidden error-message">
+            Oops! Something went wrong while fetching IP details. Please try again later.
+        </div>
+    </div>
+
+    <script>
+        const ipInfoDiv = document.getElementById('ip-info');
+        const loadingDiv = document.getElementById('loading');
+        const errorMessageDiv = document.getElementById('error-message');
+        const containerDiv = document.querySelector('.container');
+        const ipInfoParagraphs = document.querySelectorAll('#ip-info p');
+
+        async function getIPDetails() {
+            try {
+                const response = await fetch('https://api.ipify.org?format=json');
+                const ipData = await response.json();
+                const ipAddress = ipData.ip;
+
+                const detailsResponse = await fetch(`http://ip-api.com/json/${ipAddress}`);
+                const details = await detailsResponse.json();
+
+                if (details.status === 'success') {
+                    return details;
+                } else {
+                    return { error: 'Could not retrieve IP details.' };
+                }
+
+            } catch (error) {
+                return { error: 'Network error or API unavailable.' };
+            }
+        }
+
+        function displayIPDetails(data) {
+            document.getElementById('ip').textContent = data.query || 'N/A';
+            document.getElementById('country').textContent = data.country || 'N/A';
+            document.getElementById('countryCode').textContent = data.countryCode || 'N/A';
+            document.getElementById('regionName').textContent = data.regionName || 'N/A';
+            document.getElementById('city').textContent = data.city || 'N/A';
+            document.getElementById('zip').textContent = data.zip || 'N/A';
+            document.getElementById('lat').textContent = data.lat || 'N/A';
+            document.getElementById('lon').textContent = data.lon || 'N/A';
+            document.getElementById('timezone').textContent = data.timezone || 'N/A';
+            document.getElementById('isp').textContent = data.isp || 'N/A';
+            document.getElementById('org').textContent = data.org || 'N/A';
+            document.getElementById('as').textContent = data.as || 'N/A';
+
+            hideElement(loadingDiv);
+            showElement(ipInfoDiv);
+        }
+
+        function displayError() {
+            hideElement(loadingDiv);
+            showElement(errorMessageDiv);
+        }
+
+        function showElement(element) {
+            element.classList.remove('hidden');
+        }
+
+        function hideElement(element) {
+            element.classList.add('hidden');
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const ipDetails = await getIPDetails();
+
+            if (ipDetails && !ipDetails.error) {
+                displayIPDetails(ipDetails);
+            } else {
+                displayError();
+                if (ipDetails && ipDetails.error) {
+                    console.error("Error fetching IP details:", ipDetails.error);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
