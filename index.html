@@ -300,7 +300,7 @@
                 const ipData = await response.json();
                 const ipAddress = ipData.ip;
 
-                const detailsResponse = await fetch(`http://ip-api.com/json/${ipAddress}`);
+                const detailsResponse = await fetch(`https://ip-api.com/json/${ipAddress}`);
                 const details = await detailsResponse.json();
 
                 if (details.status === 'success') {
